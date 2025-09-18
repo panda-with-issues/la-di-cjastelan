@@ -7,8 +7,30 @@
 {% endblock %}
 
 {% block content %}
-  <article class="error">
-    <h2>Permesso negato</h2>
-    <p>Solo gli admin possono accedere a questa sezione. Torna <a onclick="window.history.back()">indietro</a></p>
-  </article>
+  <main class="error">
+    <h2>
+      {% if error_code == 403 %}
+        Permesso negato
+      {% elif error_code == 404 %}
+        Pagina non trovata
+      {% elif error_code == 500 %}
+        Qualcosa è andato storto :(
+      {% endif %}
+    </h2>
+    
+    {% if error_code == 403 %}
+      <p>Solo gli admin possono accedere a questa pagina</p>
+    {% elif error_code == 500 %}
+      <p>Il server ha riscontrato un errore interno.</p>
+      <p>Riprova, se l'errore persiste contatta Yuuki.</p>
+    {% endif %}
+    
+    <p>Torna <a onclick="window.history.back()">indietro</a></p>
+
+    <small>
+      Dettagli errore:<br>
+      {{ error_code }} - {{error_name}}<br>
+      {{ error_description }}
+    </small>
+  </main>
 {% endblock %}

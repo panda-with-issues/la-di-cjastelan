@@ -7,9 +7,9 @@ from sqlalchemy import exc
 
 bp = Blueprint('mercati', __name__, url_prefix='/mercati')
 
+@bp.route('/visualizza', methods=('GET', 'POST'))
 @login_required
 @admin_required
-@bp.route('/visualizza', methods=('GET', 'POST'))
 def visualizza():
   # va castato a list perché lazy iterator e se viene letto dopo il commit, è invalido.
   # se invece lo materializziamo subito castandolo, non dà problemi
@@ -69,9 +69,9 @@ def visualizza():
     
   return render_template('mercati.html', mercati=mercati, new_nome=new_nome, new_giorno=new_giorno)
 
+@bp.route('/visualizza/add-mode')
 @login_required
 @admin_required
-@bp.route('/visualizza/add-mode')
 def add_mode():
   if session.get('edit_id'):
     session.pop('edit_id')
@@ -120,9 +120,9 @@ def validate_input(form):
   
   return None, mercato
 
+@bp.route('edit/<nome>/<giorno>')
 @login_required
 @admin_required
-@bp.route('edit/<nome>/<giorno>')
 def edit_mode(nome, giorno):
   if session.get('add_mode'):
     session.pop('add_mode')

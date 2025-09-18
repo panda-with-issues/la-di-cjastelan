@@ -6,7 +6,7 @@ from PIL import Image
 import cv2
 import numpy as np
 from flask import (
-    Blueprint, render_template, request, flash, jsonify, session, redirect, url_for
+    Blueprint, render_template, request, flash, jsonify, session, abort
 )
 from app.auth import login_required
 
@@ -150,9 +150,20 @@ def parse_float(word):
 def cattura():
   if request.method == 'POST':
     payload = request.get_json()
+
+    if not payload or'image' not in payload:
+      return jsonify({
+        'message': 'Nessuna immagine inviata'
+      }), 400
+    
     img_encoded = payload['image']
-    # Rimuovi "data:image/png;base64,"
-    encoded = img_encoded.split(',', 1)[1]
+    header, encoded = img_encoded.split(',', 1)
+
+    if header != 'data:image/png;base64':
+      return jsonify({
+        'message': 'Formato immagine non supportato'
+      }), 400
+    
     decoded = base64.b64decode(encoded)
     img = cv2.imdecode(np.frombuffer(decoded, np.uint8), cv2.IMREAD_COLOR)
     result = reader.readtext(img, detail=0)

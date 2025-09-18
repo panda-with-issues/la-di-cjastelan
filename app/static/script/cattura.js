@@ -11,7 +11,9 @@ const cancella = document.getElementById('cancella')
 const invia = document.getElementById('invia')
 const audio = document.querySelector('audio')
 const btnWrapper = document.querySelector('.btn-wrapper')
-const wave = document.querySelector('.wave')
+const error = document.getElementById('error')
+const errDescription = document.getElementById('error-description')
+const errBtn = document.getElementById('error-btn')
 
 let stream = null
 let imgReady = false
@@ -83,7 +85,9 @@ function takePicture () {
   stream.removeTrack(videoTrack)
 }
 
-cancella.addEventListener('click', () => {
+cancella.addEventListener('click', reinitUI)
+
+function reinitUI () {
   getStream()
   btnWrapper.classList.add('hidden')
   cover.hidden = true
@@ -95,7 +99,7 @@ cancella.addEventListener('click', () => {
   invia.classList.add('disabled')
   // icona FontAwesome spinner
   invia.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'
-})
+}
 
 invia.addEventListener('click', async () => {
   if (imgReady) {
@@ -110,20 +114,31 @@ invia.addEventListener('click', async () => {
           'image': hq.toDataURL('image/png')
         })
       })
+      const payload = await res.json()
 
       if (!res.ok) {
-        throw new Error(`Richiesta fallita. Codice errore ${res.status}`);
+        loading.classList.add('hidden')
+        error.classList.remove('hidden')
+        
+        if (!payload) {
+          throw new Error(`Qualcosa è andato storto. Errore ${res.status} - ${res.statusText}`)
+        }
+
+        errDescription.textContent = payload.message
+
+      } else {
+        window.location.replace('/ocr')
       }
-  
-      const payload = await res.json()
-      if (res.status !== 'ok') {
-        // gestire l'errore
-      }
-      window.location.replace('/ocr')
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      errDescription.textContent = error.message
     }
   } else {
-    
+    error.classList.remove('hidden')
+    errDescription.textContent = 'Nessuna foto da leggere o la foto non è ancora pronta. Riprova tra poco.'
   }
+})
+
+errBtn.addEventListener('click', () => {
+  error.classList.add('hidden')
+  reinitUI()
 })

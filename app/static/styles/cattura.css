@@ -23,7 +23,8 @@ body {
 }
 
 .hidden,
-#loading.hidden {
+#loading.hidden,
+#error.hidden {
   display: none;
 }
 
@@ -83,7 +84,8 @@ body {
   font-size: 1.5rem;
 }
 
-#loading {
+#loading,
+#error {
   background-color: rgba(0, 0, 0, 0.8);
 
   display: flex;
@@ -114,4 +116,22 @@ body {
       font-size: 1.5rem;
     }
   }
+}
+
+#error .wrapper {
+  justify-content: space-around;
+
+  p.global-error {
+    font-size: 2rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin: 0 1rem;
+  }
+}
+
+#error-btn {
+  font-size: 1.5rem;
+  padding: .3em 2em;
 }

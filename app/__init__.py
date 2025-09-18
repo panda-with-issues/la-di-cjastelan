@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, request
+from werkzeug.exceptions import HTTPException
 from app.auth import login_required, admin_required
 from . import database, auth, corr, mercati, ocr
 
@@ -28,8 +29,13 @@ def create_app():
   def index():
     return render_template('index.html')
 
-  @app.errorhandler(403)
-  def forbidden(e):
-    return render_template('error.html', url=request.referrer), 403
+  @app.errorhandler(HTTPException)
+  def error_handler(e):
+    return render_template(
+      'error.html',
+      error_code = e.code,
+      error_name = e.name,
+      error_description = e.description,
+      url=request.referrer), e.code
   
   return app
