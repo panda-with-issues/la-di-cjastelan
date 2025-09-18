@@ -6,4 +6,5 @@ imgs/presentazione/resources
 riccardo.ipynb
 
 instance/*sqlite
+instance/uploads
 app/__pycache__

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/reset.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/cattura.css')}}">
+
+  <script src="{{ url_for('static', filename='script/cattura.js')}}" defer></script>
+  <script src="https://kit.fontawesome.com/9f6b895217.js" crossorigin="anonymous"></script>
+
+  <title>Là di Cjastelan | Cattura</title>
+</head>
+
+<body>
+  <!-- Sound Effect by <a href="https://pixabay.com/users/freesound_community-46691455/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6448">freesound_community</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6448">Pixabay</a> -->
+  <audio src="{{ url_for('static', filename='camera-capture.mp3') }}"></audio>
+
+  <canvas id="preview" hidden></canvas>
+  <canvas id="hq" hidden></canvas>
+
+  <video class="full-screen" autoplay playsinline id="video">Fotocamera non disponibile</video>
+
+  <div class="full-screen" id="flash" hidden></div>
+
+  <div class="full-screen" id="cover" hidden></div>
+
+  <img class="full-scale" id="foto" hidden>
+  
+  <div class="full-screen hidden" id="loading">
+    <div class="wrapper">
+      <!-- icona FontAwesome spinner -->
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <p>Sto leggendo...</p>
+    </div>
+  </div>
+  
+  <button id="scatta">
+    <!-- icona FontAwesome fotocamera -->
+    <i class="fa-regular fa-camera"></i>
+  </button>
+
+  <div class="btn-wrapper hidden">
+    <button class="global-btn" id="cancella">
+      <!-- icona FontAwesome cestino -->
+      <i class="fa-solid fa-trash"></i>
+    </button>
+
+    <button class="global-btn disabled" id="invia" disabled>
+      <!-- icona FontAwesome spinner -->
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </button>
+  </div>
+
+</body>
+</html>
