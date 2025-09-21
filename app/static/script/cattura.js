@@ -24,13 +24,17 @@ const errBtn = document.getElementById('error-btn')
 let stream = null
 let imgReady = false
 
-getStream()
+let resolution = {
+  width: { ideal: 10_000 },
+  height: { ideal: 10_000 },
+}
 
-function getStream () {
+getStream(resolution)
+
+function getStream (resolution) {
   navigator.mediaDevices.getUserMedia({
     video: {
-      width: { ideal: 10_000 },
-      height: { ideal: 10_000 },
+      ...resolution,
       facingMode: 'environment'
     }
   })
@@ -111,36 +115,44 @@ function reinitUI () {
   invia.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'
 }
 
-invia.addEventListener('click', async () => {
+invia.addEventListener('click', () => {
   if (imgReady) {
     loading.classList.remove('hidden')
-    try {
-      const res = await fetch(catturaEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          'image': hq.toDataURL('image/png')
+    
+    hq.toBlob(async (blob) => {
+      const fd = new FormData()
+      fd.append('image', blob, 'tmp-img.png')
+
+      try {
+        const res = await fetch(catturaEndpoint, {
+          method: 'POST',
+          body: fd
         })
-      })
       
-      if (!res.ok) {
-        loading.classList.add('hidden')
-        error.classList.remove('hidden')
-        
-        try {
-          const payload = await res.json()
-          errDescription.textContent = payload.message
-        } catch (jsonError) {
-          throw new Error(`Qualcosa è andato storto. Errore ${res.status} - ${res.statusText}`)
+        if (!res.ok) {
+          loading.classList.add('hidden')
+          error.classList.remove('hidden')
+          
+          try {
+            const payload = await res.json()
+            errDescription.textContent = payload.message
+            
+            if (payload.message.includes('esaurito la memoria')) {
+              resolution = {
+                width: { ideal: 2048},
+                height: { ideal: 2048 }
+              }
+            }
+          } catch (jsonError) {
+            throw new Error(`Qualcosa è andato storto. Errore ${res.status} - ${res.statusText}`)
+          }
+        } else {
+          window.location.replace(corrUrl)
         }
-      } else {
-        window.location.replace('/ocr')
+      } catch (error) {
+        errDescription.textContent = error.message
       }
-    } catch (error) {
-      errDescription.textContent = error.message
-    }
+    })
   } else {
     error.classList.remove('hidden')
     errDescription.textContent = 'Nessuna foto da leggere o la foto non è ancora pronta. Riprova tra poco.'
