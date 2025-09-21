@@ -1,16 +1,22 @@
 'use strict'
 
 const video = document.getElementById('video')
+
+const helpBtn = document.getElementById('help-btn')
+const help = document.querySelector('dialog')
+
 const scatta = document.getElementById('scatta')
 const preview = document.getElementById('preview')
 const hq = document.getElementById('hq')
 const flash = document.getElementById('flash')
+
 const cover = document.getElementById('cover')
 const foto = document.getElementById('foto')
 const cancella = document.getElementById('cancella')
 const invia = document.getElementById('invia')
 const audio = document.querySelector('audio')
 const btnWrapper = document.querySelector('.btn-wrapper')
+
 const error = document.getElementById('error')
 const errDescription = document.getElementById('error-description')
 const errBtn = document.getElementById('error-btn')
@@ -23,8 +29,8 @@ getStream()
 function getStream () {
   navigator.mediaDevices.getUserMedia({
     video: {
-      width: { ideal: 10_000},
-      height: { ideal: 10_000},
+      width: { ideal: 10_000 },
+      height: { ideal: 10_000 },
       facingMode: 'environment'
     }
   })
@@ -45,6 +51,10 @@ video.addEventListener('loadedmetadata', e => {
   preview.height = video.videoHeight * window.innerWidth / video.videoWidth
 })
 
+helpBtn.addEventListener('click', () => {
+  help.showModal()
+})
+
 scatta.addEventListener('click', e => {
   flash.hidden = false
   requestAnimationFrame(() => {
@@ -62,7 +72,7 @@ scatta.addEventListener('click', e => {
 
   const previewCtx = preview.getContext('2d')
   previewCtx.drawImage(video, 0, 0, preview.width, preview.height)
-  foto.src = preview.toDataURL('image/jpeg', 0.8)
+  foto.src = preview.toDataURL('image/png')
   foto.hidden = false
   requestAnimationFrame(() => {
     foto.classList.add('shrink')
@@ -105,7 +115,7 @@ invia.addEventListener('click', async () => {
   if (imgReady) {
     loading.classList.remove('hidden')
     try {
-      const res = await fetch('/ocr/cattura', {
+      const res = await fetch(catturaEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -114,18 +124,17 @@ invia.addEventListener('click', async () => {
           'image': hq.toDataURL('image/png')
         })
       })
-      const payload = await res.json()
-
+      
       if (!res.ok) {
         loading.classList.add('hidden')
         error.classList.remove('hidden')
         
-        if (!payload) {
+        try {
+          const payload = await res.json()
+          errDescription.textContent = payload.message
+        } catch (jsonError) {
           throw new Error(`Qualcosa è andato storto. Errore ${res.status} - ${res.statusText}`)
         }
-
-        errDescription.textContent = payload.message
-
       } else {
         window.location.replace('/ocr')
       }

@@ -5,6 +5,6 @@ imgs/presentazione/resources
 *.R
 riccardo.ipynb
 
-instance/*sqlite
-instance/uploads
+instance/
+
 app/__pycache__

@@ -14,6 +14,9 @@
 
   <script src="{{ url_for('static', filename='script/cattura.js')}}" defer></script>
   <script src="https://kit.fontawesome.com/9f6b895217.js" crossorigin="anonymous"></script>
+  <script>
+    const catturaEndpoint = {{ url_for('ocr.cattura')|tojson }}
+  </script>
 
   <title>Là di Cjastelan | Cattura</title>
 </head>
@@ -27,6 +30,36 @@
 
   <video class="full-screen" autoplay playsinline id="video">Fotocamera non disponibile</video>
 
+  <nav>
+    <!-- Croce per tornare indietro -->
+    <a href="{{ url_for('corr.inserisci') }}">&times;</a>
+    <button type="button" id="help-btn">?</button>
+  </nav>
+
+  <dialog>
+    <p>Fotografa solo la prima parte dello scontrino, da sotto "Azzeramento Reparti" fino alla data sopra "Documento Gestionale".</p>
+    <p>
+      Cerca di riempire il più possibile lo schermo, facendo in modo che nella foto ci sia solo lo scontrino e nient'altro: più
+      grandi e nitidi sono i caratteri, più preciso e veloce sarà il lettore nel riconoscimento.
+    </p>
+    <p>Cerca di avere uno sfondo uniforme, preferibilmente ad alto contrasto ripetto al bianco, per esempio poggiando lo scontrino su un tavolo scuro.</p>
+    <p>
+      Dopo aver scattato, tocca
+      <span class="global-btn text-btn">
+        <i class="fa-regular fa-circle-check"></i>
+      </span>
+      per leggere la foto. Se lo scatto non ti piace, tocca
+      <span class="global-btn text-btn">
+        <i class="fa-solid fa-trash"></i>
+      </span>
+      per scattare un'altra foto.
+    </p>
+    <p>
+      Guarda gli esempi TODO.
+    </p>
+    <form method="dialog"><button class="global-btn">Ok</button></form>
+  </dialog>
+
   <div class="full-screen" id="flash" hidden></div>
 
   <div class="full-screen" id="cover" hidden></div>
@@ -35,33 +68,33 @@
   
   <div class="full-screen hidden" id="loading">
     <div class="wrapper">
-      <!-- icona FontAwesome spinner -->
+      <!-- Icona FontAwesome spinner -->
       <i class="fa-solid fa-spinner fa-spin"></i>
       <p>Sto leggendo...</p>
     </div>
   </div>
 
-  <div class="full-screen hidden" id="error">
+  <section class="full-screen hidden" id="error">
     <div class="wrapper">
-      <p class="global-error">Errore</p>
+      <h3 class="global-error modal-title">Errore</h3>
       <p id="error-description"></p>
       <button class="global-btn" id="error-btn">Ok</button>
     </div>
-  </div>
+  </section>
   
   <button id="scatta">
-    <!-- icona FontAwesome fotocamera -->
+    <!-- Icona FontAwesome fotocamera -->
     <i class="fa-regular fa-camera"></i>
   </button>
 
   <div class="btn-wrapper hidden">
     <button class="global-btn" id="cancella">
-      <!-- icona FontAwesome cestino -->
+      <!-- Icona FontAwesome cestino -->
       <i class="fa-solid fa-trash"></i>
     </button>
 
     <button class="global-btn disabled" id="invia" disabled>
-      <!-- icona FontAwesome spinner -->
+      <!-- Icona FontAwesome spinner -->
       <i class="fa-solid fa-spinner fa-spin"></i>
     </button>
   </div>

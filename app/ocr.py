@@ -8,6 +8,7 @@ import numpy as np
 from flask import (
     Blueprint, render_template, request, flash, jsonify, session, abort
 )
+from torch.cuda import OutOfMemoryError
 from app.auth import login_required
 
 reader = easyocr.Reader(['it'])
@@ -30,7 +31,6 @@ def ocr():
 
       if not error:
         image = Image.open(file.stream)
-        # image.thumbnail(MAX_SIZE)
         image = np.array(image.convert('L'))
         result = reader.readtext(image, detail=0)
   # if 'image' in session.keys():
@@ -166,11 +166,18 @@ def cattura():
     
     decoded = base64.b64decode(encoded)
     img = cv2.imdecode(np.frombuffer(decoded, np.uint8), cv2.IMREAD_COLOR)
-    result = reader.readtext(img, detail=0)
-    session['result'] = result
-    return jsonify({
-      'status': 'ok',
-    })
+    try:
+      result = reader.readtext(img, detail=0)
+      session['result'] = result
+      return jsonify({
+        'status': 'ok',
+      })
+    except OutOfMemoryError:
+      return jsonify({
+        'message': 'Immagine troppo grande: la GPU ha esaurito la memoria. Riprova più tardi.'
+      }), 500
+    # import os
+    # from flask import current_app
     # fname = os.path.join(current_app.instance_path, 'uploads', datetime.strftime(datetime.now(), '%y-%m-%d_%H:%M:%S.png'))
     # try:
     #   with open(fname, "wb") as f:
@@ -180,7 +187,6 @@ def cattura():
     #     'status': 'ok',
     #     'filename': fname
     #   })
-    
     # except Exception as e:
     #   return jsonify({
     #     'status': 'fail',
