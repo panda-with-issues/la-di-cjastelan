@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block content %}
-  <nav class="console text-medium">
+<img class="global-logo" src="{{ url_for('static', filename='logo.png') }}">
+  <nav class="text-medium console">
     <ul>
       <li><a class="global-btn" href="{{ url_for('corr.inserisci') }}">Inserisci corrispettivi</a></li>
       <li><a class="global-btn" href="{{ url_for('mercati.visualizza') }}">Gestisci mercati</a></li>

@@ -1,5 +1,25 @@
 .console {
   display: flex;
+  margin-top: 5vh;
+  justify-content: center;
+  align-items: center;
+
+  ul {
+    display: inline-block;
+  }
+
+  li {
+    margin: 2em 0;
+  }
+
+  a {
+    display: block;
+    text-align: center;
+  }
+}
+
+/* .console {
+  display: flex;
   min-height: 50vh;
   justify-content: center;
   align-items: center;
@@ -10,4 +30,4 @@
     width: 33vw;
     justify-content: space-between;
   }
-}
+} */
