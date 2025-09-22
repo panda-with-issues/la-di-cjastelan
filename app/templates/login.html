@@ -7,18 +7,19 @@
 {% endblock %}
 
 {% block content %}
-  <section class="section-login text-big">
+  <img class="global-logo" src="{{ url_for('static', filename='logo.png')}}">
+  <main class="login text-big">
     <form method="post" id="login-form">
       <label for="username">Nome</label>
       <input class="text-big" name="username" id="username"
-        value="{% if error %}{{ request.form['username'] }}{% endif %}"required>
+        value="{% if error %}{{ request.form['username'] }}{% endif %}" autocomplete="username" required>
       <label for="password">Password</label>
-      <input class="text-big" type="password" name="password" id="password" required>
+      <input class="text-big" type="password" name="password" id="password" autocomplete="current-password" required>
       <input class="text-big global-btn" type="submit" value="Accedi">
     </form>
 
     {% for message in get_flashed_messages() %}
-    <p class="global-error">{{ message }}</p>
+      <p class="global-error">{{ message }}</p>
     {% endfor %}
-  </section>
+  </main>
 {% endblock %}

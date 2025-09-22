@@ -88,13 +88,11 @@ td {
   }
 }
 
-.global-header {
-  img {
-    display: block;
-    height: 15vh;
-    width: auto;
-    margin: 2rem auto;
-  }
+.global-logo {
+  display: block;
+  width: 40vw;
+  height: auto;
+  margin: 3rem auto 0;
 }
 
 .global-btn {
@@ -116,4 +114,11 @@ td {
 
 .pointer:hover {
   cursor: pointer;
+}
+
+@media only screen and (min-width: 480px) {
+  .global-logo {
+    height: 20vh;
+    width: auto;
+  }
 }

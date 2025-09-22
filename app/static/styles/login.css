@@ -1,4 +1,4 @@
-.section-login{
+.login{
   display: flex;
   flex-direction: column;
   width: 100vw;
@@ -7,17 +7,31 @@
   align-items: center;
   
   #login-form {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
 
   label {
+    margin: 0 2em;
     color: var(--color-title);
     font-weight: bold;
   }
 
   input {
-    margin: .5em 0 1.5em;
+    margin: .5em 2em 1.5em;
     padding: .15em .3em;
+  }
+
+  input[type="submit"] {
+    width: fit-content;
+    padding: .25em 1em;
+    align-self: center;
+  }
+
+  @media only screen and (min-width: 480px) {
+    #login-form {
+      width: 33%;
+    }
   }
 }
