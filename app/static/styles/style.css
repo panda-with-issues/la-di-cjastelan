@@ -9,7 +9,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 18px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -62,6 +62,10 @@ td {
 
 .text-medium {
   font-size: 1.4rem;
+}
+
+.text-small {
+  font-size: .8rem;
 }
 
 .bold {
