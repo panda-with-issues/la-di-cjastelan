@@ -64,10 +64,6 @@ td {
   font-size: 1.4rem;
 }
 
-.text-small {
-  font-size: .8rem;
-}
-
 .bold {
   font-weight: bold;
   color: var(--color-title)
@@ -84,6 +80,7 @@ td {
 
 .global-logout {
   padding: 1em;
+  font-size: 0.8rem;
   text-align: right;
   background-color: var(--color-bg);
 
@@ -128,5 +125,9 @@ td {
   .global-logo {
     height: 20vh;
     width: auto;
+  }
+
+  .global-logout {
+    font-size: 1rem;
   }
 }
