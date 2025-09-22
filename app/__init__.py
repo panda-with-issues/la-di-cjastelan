@@ -1,7 +1,7 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, g, redirect, url_for
 from werkzeug.exceptions import HTTPException
-from app.auth import login_required, admin_required
+from app.auth import login_required
 from . import database, auth, corr, mercati, ocr
 
 def create_app():
@@ -25,8 +25,9 @@ def create_app():
   
   @app.route('/')
   @login_required
-  @admin_required
   def index():
+    if not g.user.is_admin:
+      return redirect(url_for('corr.inserisci'))
     return render_template('index.html')
 
   @app.errorhandler(HTTPException)
