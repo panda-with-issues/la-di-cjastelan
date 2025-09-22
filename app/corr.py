@@ -16,6 +16,7 @@ bp = Blueprint('corr', __name__, url_prefix='/corr')
 def inserisci():
   if (session.get('to_insert')):
     session.pop('to_insert')
+    
   # Va castato a list perché scalars ritorna un iteratore che consuma i dati quando ci iteri sopra, quindi non posso
   # iterarci due volte senza rifare la query
   mercati = list(db.session.scalars(db.select(Mercati).where(or_(Mercati.is_attuale==True, Mercati.is_evento==True))))

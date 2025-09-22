@@ -68,6 +68,11 @@ class Corrispettivi(db.Model):
   reparto3: Mapped[Decimal] = mapped_column(Numeric(10, 2))
   reparto4: Mapped[Decimal] = mapped_column(Numeric(10, 2))
   reparto5: Mapped[Decimal] = mapped_column(Numeric(10, 2))
+  quantita1: Mapped[int]
+  quantita2: Mapped[int]
+  quantita3: Mapped[int]
+  quantita4: Mapped[int]
+  quantita5: Mapped[int]
 
   __table_args__ =(
     ForeignKeyConstraint(
@@ -104,6 +109,26 @@ class Corrispettivi(db.Model):
     CheckConstraint(
       'reparto5 >= 0',
       name='reparto5_non_negativo_check'
+    ),
+    CheckConstraint(
+      'quantita1 >= 0',
+      name='quantita1_non_negativo_check'
+    ),
+    CheckConstraint(
+      'quantita2 >= 0',
+      name='quantita2_non_negativo_check'
+    ),
+    CheckConstraint(
+      'quantita3 >= 0',
+      name='quantita3_non_negativo_check'
+    ),
+    CheckConstraint(
+      'quantita4 >= 0',
+      name='quantita4_non_negativo_check'
+    ),
+    CheckConstraint(
+      'quantita5 >= 0',
+      name='quantita5_non_negativo_check'
     )
   )
 
