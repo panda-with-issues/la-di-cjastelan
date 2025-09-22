@@ -83,8 +83,8 @@ td {
   text-align: right;
   background-color: var(--color-bg);
 
-  span {
-    margin-right: 1.5em;
+  a {
+    margin-left: 1em;
   }
 }
 
