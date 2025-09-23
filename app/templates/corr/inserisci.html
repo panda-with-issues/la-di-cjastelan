@@ -7,25 +7,26 @@
 {% endblock %}
 
 {% block script %}
-  <script src="{{url_for('static', filename='script/inserisci.js')}}" defer></script>
-{% endblock %}
-
-{% block content %}
+  <script src="{{url_for('static', filename='script/corr.js')}}" defer></script>
   <script>
     const mercati = {{ mercati|tojson }}
     const session = {{ session|tojson }}
-    const confirmation = {{ confirmation|tojson }}
+    const serverError = {{ error|tojson }}
+    // const confirmation = { confirmation|tojson }}
   </script>
+{% endblock %}
 
-  <section>
+{% block content %}
+  <main>
     <form class="corrispettivi-inserisci" method="POST">
       <fieldset>
         <legend>Mercato</legend>
 
-        <label>Data <input type="date" name="data" max="{{ today }}" value="{{ session['data'] }}"required></label>
+        <label for="data">Data</label>
+        <input type="date" name="data" max="{{ today }}" value="{{ session['data'] }}" id="data" required>
 
-        <label>Mercato
-          <select name="mercato" required>
+        <label for="mercato">Mercato</label>
+        <select name="mercato" id="mercato" required>
             {% if not session['mercato'] %}
               <option selected></option>
             {% endif %}
@@ -39,64 +40,84 @@
               </option>
             {% endfor %}
           </select>
-        </label>
 
-        <label>Giorno
-          <select name="giorno_mercato" required>
-            {% for giorno in [ 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica' ]%}
-              <option
-              {% if giorno == session['giorno_mercato'] %}
-                selected
-              {% endif %}
-              >
-                {{ giorno }}
-              </option>
-            {% endfor %}
-          </select>
-        </label>
+        <label for="giorno_mercato">Giorno</label>
+        <select name="giorno_mercato" id="giorno_mercato" required>
+          {% for giorno in [ 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica' ]%}
+            <option
+            {% if giorno == session['giorno_mercato'] %}
+              selected
+            {% endif %}
+            >
+              {{ giorno }}
+            </option>
+          {% endfor %}
+        </select>
+        
 
-        <label>Cassa
-          <select name="cassa" value="{{ session['cassa'] }}"required>
-            <option>Cassa 1</option>
-            <option>Cassa 2</option>
-            <option>Cassa 3</option>
-          </select>
-        </label>
+        <label for="cassa">Cassa</label>
+        <select name="cassa" value="{{ session['cassa'] }}" id="cassa" required>
+          <option>Cassa 1</option>
+          <option>Cassa 2</option>
+          <option>Cassa 3</option>
+        </select>
       </fieldset>
 
       <fieldset class="reparti">
         <legend>Corrispettivo</legend>
 
-        <label>Reparto 1 <input type="number" min="0" step="0.01" name="reparto1" value="{{ session['reparto1'] }}"></label>
-        <label>Reparto 2 <input type="number" min="0" step="0.01" name="reparto2" value="{{ session['reparto2'] }}"></label>
-        <label>Reparto 3 <input type="number" min="0" step="0.01" name="reparto3" value="{{ session['reparto3'] }}"></label>
-        <label>Reparto 4 <input type="number" min="0" step="0.01" name="reparto4" value="{{ session['reparto4'] }}"></label>
-        <label>Reparto 5 <input type="number" min="0" step="0.01" name="reparto5" value="{{ session['reparto5'] }}"></label>
-        <label>Totale <input type="number" min="0" step="0.01" name="totale" value="{{ session['totale'] }}" required></label>
-      </fieldset>
+        <p>Reparto 1</p>
+        <label>Quantità: <input type="number" name="quantita1" min="0" step="1" value="{{ session['quantita1'] }}"></label>
+        <label>Totale: <input type="number" min="0" step="0.01" name="reparto1" value="{{ session['reparto1'] }}"></label>
 
-      {% for message in get_flashed_messages() %}
-        <span class="global-error text-medium">{{ message }}</span>
-      {% endfor %}
+        <p>Reparto 2</p>
+        <label>Quantità: <input type="number" name="quantita2" min="0" step="1" value="{{ session['quantita2'] }}"></label>
+        <label>Totale: <input type="number" min="0" step="0.01" name="reparto2" value="{{ session['reparto2'] }}"></label>
+        
+        <p>Reparto 3</p>
+        <label>Quantità: <input type="number" name="quantita3" min="0" step="1" value="{{ session['quantita3'] }}"></label>
+        <label>Totale: <input type="number" min="0" step="0.01" name="reparto3" value="{{ session['reparto3'] }}"></label>
+
+        <p>Reparto 4</p>
+        <label>Quantità: <input type="number" name="quantita4" min="0" step="1" value="{{ session['quantita4'] }}"></label>
+        <label>Totale: <input type="number" min="0" step="0.01" name="reparto4" value="{{ session['reparto4'] }}"></label>
+
+        <p>Reparto 5</p>
+        <label>Quantità: <input type="number" name="quantita5" min="0" step="1" value="{{ session['quantita5'] }}"></label>
+        <label>Totale <input type="number" min="0" step="0.01" name="reparto5" value="{{ session['reparto5'] }}"></label>
+      
+        <div class="totali">
+          <label>N. pezzi: <input type="number" name="quantita_totale" min="0" step="1" value="{{ session['quantita_totale'] }}" required></label>
+          <label>Totale: <input type="number" min="0" step="0.01" name="totale" value="{{ session['totale'] }}" required></label>
+        </div>
+      </fieldset>
 
       <button class="global-btn text-medium" type="submit">Inserisci</button>
     </form>
+  </main>
 
-    {% if confirmation %}
-      <article class="confirmation text-medium">
-        <img class="attenzione hidden" src="{{url_for('static', filename='attenzione.png')}}" alt="Attenzione!">
-
-        {% if cassa_sballata %}
-          <p class="hidden"><span class="bold">{{ corrispettivo.cassa }}</span> è un valore anomalo per la cassa.</p>
-        {% endif %}
-
-        <p class="hidden">Sei sicuro di voler continuare? L'operazione <span class="bold">non potrà essere annullata</span>.</p>
-
-        <div class="btn-wrapper">
-          <a href="/corr/inserisci" class="global-btn hidden">Correggi</a>
-          <a href="/corr/inserisci/insert" class="global-btn inserisci-btn hidden">Inserisci</a>
-        </div>
-      </article>
-    {% endif %}
-  </section>
+  <dialog id="error-dialog">
+    <h2 class="global-error">Errore</h2>
+    {% for key in error %}
+      <p>{{ error[key]|safe }}</p>
+    {% endfor %}    
+    <form method="dialog"><button class="global-btn">Ok</button></form>
+  </dialog>
 {% endblock %}
+
+<!-- {% if confirmation %}
+    <article class="confirmation text-medium">
+      <img class="attenzione hidden" src="{{url_for('static', filename='attenzione.png')}}" alt="Attenzione!">
+  
+      {% if cassa_sballata %}
+        <p class="hidden"><span class="bold">{{ corrispettivo.cassa }}</span> è un valore anomalo per la cassa.</p>
+      {% endif %}
+  
+      <p class="hidden">Sei sicuro di voler continuare? L'operazione <span class="bold">non potrà essere annullata</span>.</p>
+  
+      <div class="btn-wrapper">
+        <a href="{{ url_for('corr.inserisci') }}" class="global-btn hidden">Correggi</a>
+        <a href="{{ url_for('corr.insert') }}" class="global-btn inserisci-btn hidden">Inserisci</a>
+      </div>
+    </article>
+  {% endif %} -->

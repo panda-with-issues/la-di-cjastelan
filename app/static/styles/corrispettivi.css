@@ -4,49 +4,121 @@
   align-items: center;
 
   fieldset {
+    display: flex;
+    flex-direction: column;
     border: 1px solid grey;
     border-radius: 10px;
-    padding: 1em;
-    margin-bottom: 2em;
+    padding: 1em 2em;
+    margin: 2em 0;
   }
 
   legend {
     font-weight: bold;
-    color: var(--color-title)
-  }
-
-  .reparti {
-    display: flex;
-    flex-direction: column;
-    
-    label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: .5em 0;
-    }
+    color: var(--color-title);
+    padding: 0 .33em
   }
 
   label {
-    margin-right: 1.5em;
+    display: block;
   }
 
   input,
   select {
     padding: .25em .5em;
+    margin: .2em 0 1em;
   }
 
-  input[type=number] {
-    width: 7em;
-    margin-left: 1em;
+  .input-error {
+    border: 1px solid red;
+    box-shadow: 0 0 6px 0px red;
+  }
+
+  .reparti {
+    p {
+      font-weight: bold;
+      margin-bottom: .5em;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    label:nth-of-type(even) {
+      margin-bottom: 1.5em;
+    }
+
+    input {
+      width: 6em;
+      margin-left: 1em;
+      margin-bottom: .5em;
+    }
+  }
+
+  .totali label {
+    font-weight: bold;
+  }
+
+  button {
+    margin-bottom: 2em;
   }
 
   span {
     margin-bottom: 1.5em;
   }
+
+  @media only screen and (min-width: 480px) {
+    fieldset {
+      display: block;
+    }
+
+    label {
+      display: inline;;
+    }
+
+    input,
+    select {
+      margin-left: .5em;
+      margin-right: 2em;
+    }
+
+    select:last-child {
+      margin-right: 0;
+    }
+
+    .reparti input {
+      width: auto;
+    }
+  }
 }
 
-.confirmation {
+dialog {
+  border: 1px solid var(--color-title);
+  border-radius: 25px;
+  padding: 2em;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1em;
+  }
+
+  p {
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin-bottom: 1em;
+  }
+
+  form {
+    text-align: center;
+
+    button {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/* .confirmation {
   position: absolute;
   top: 10vh;
   left: 50%;
@@ -80,7 +152,7 @@
   left: 20vw;
   width: 60vw;
   height: 80vh;
-}
+} */
 
 .corrispettivi-success {
   display: flex;
@@ -99,7 +171,7 @@
 }
 
 .btn-wrapper {
-    min-width: 33%;
-    display: flex;
-    justify-content: space-between;
-  }
+  min-width: 33%;
+  display: flex;
+  justify-content: space-between;
+}
