@@ -37,7 +37,7 @@
     <button type="button" id="help-btn">?</button>
   </nav>
 
-  <dialog>
+  <dialog id="help">
     <p>Fotografa solo la prima parte dello scontrino, da sotto "Azzeramento Reparti" fino alla data sopra "Documento Gestionale".</p>
     <p>
       Cerca di riempire il più possibile lo schermo, facendo in modo che nella foto ci sia solo lo scontrino e nient'altro: più
@@ -63,25 +63,19 @@
 
   <div class="full-screen" id="flash" hidden></div>
 
-  <div class="full-screen" id="cover" hidden></div>
-
   <img class="full-scale" id="foto" hidden>
   
-  <div class="full-screen hidden" id="loading">
-    <div class="wrapper">
-      <!-- Icona FontAwesome spinner -->
-      <i class="fa-solid fa-spinner fa-spin"></i>
-      <p>Sto leggendo...</p>
-    </div>
-  </div>
+  <dialog id="loading">
+    <!-- Icona FontAwesome spinner -->
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <p>Sto leggendo...</p>
+  </dialog>
 
-  <section class="full-screen hidden" id="error">
-    <div class="wrapper">
-      <h3 class="global-error modal-title">Errore</h3>
-      <p id="error-description"></p>
-      <button class="global-btn" id="error-btn">Ok</button>
-    </div>
-  </section>
+  <dialog id="error">
+    <h3 class="global-error modal-title">Errore</h3>
+    <p id="error-description"></p>
+    <button class="global-btn" id="error-btn">Ok</button>
+  </dialog>
   
   <button id="scatta">
     <!-- Icona FontAwesome fotocamera -->

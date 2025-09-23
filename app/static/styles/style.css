@@ -33,6 +33,11 @@ a {
   }
 }
 
+em {
+  font-style: italic;
+  color: gray;
+}
+
 input,
 select {
   font-size: 1rem;

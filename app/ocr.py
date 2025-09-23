@@ -144,11 +144,11 @@ def cattura():
       })
     except OutOfMemoryError:
       return jsonify({
-        'message': 'Immagine troppo grande: la GPU ha esaurito la memoria. Riprova più tardi.'
+        'message': 'Immagine troppo grande: la GPU ha esaurito la memoria. La qualità della foto sarà automaticamente ridotta per il prossimo tentativo. Riprova.'
       }), 500
     except Exception as e:
       return jsonify({
-        'message': f"Errore durante l'elaborazione dell'immagine. Dettagli: {e}"
+        'message': f"Errore durante l'elaborazione dell'immagine. Dettagli: <em>{e}</em>"
       }), 500
     
   return render_template('cattura.html')

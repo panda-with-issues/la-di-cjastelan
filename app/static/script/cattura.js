@@ -3,21 +3,20 @@
 const video = document.getElementById('video')
 
 const helpBtn = document.getElementById('help-btn')
-const help = document.querySelector('dialog')
+const help = document.getElementById('help')
 
 const scatta = document.getElementById('scatta')
 const preview = document.getElementById('preview')
 const hq = document.getElementById('hq')
 const flash = document.getElementById('flash')
 
-const cover = document.getElementById('cover')
 const foto = document.getElementById('foto')
 const cancella = document.getElementById('cancella')
 const invia = document.getElementById('invia')
 const audio = document.querySelector('audio')
 const btnWrapper = document.querySelector('.btn-wrapper')
 
-const error = document.getElementById('error')
+const errDialog = document.getElementById('error')
 const errDescription = document.getElementById('error-description')
 const errBtn = document.getElementById('error-btn')
 
@@ -42,8 +41,11 @@ function getStream (resolution) {
     stream = s
     video.srcObject = s
   })
-  .catch(err => {
-    console.log(`Succede se non c'è fotocamera compatibile oppure nega i permessiErrore di acquisizione dalla fotocamera. Dettagli errore: ${err}`)
+  .catch(error => {
+    errDialog.showModal()
+    errDescription.innerHTML =
+      `Non sono stati concessi i permessi per usare la fotocamera o non è stata trovata una fotocamera compatibile.<br>
+      Dettagli errore: <em>${error}</em>`
   })
 }
 
@@ -66,7 +68,7 @@ scatta.addEventListener('click', e => {
       flash.hidden = true
     })
   })
-  cover.hidden = false
+  flash.hidden = false
 
   audio.play()
 
@@ -102,9 +104,9 @@ function takePicture () {
 cancella.addEventListener('click', reinitUI)
 
 function reinitUI () {
-  getStream()
+  getStream(resolution)
   btnWrapper.classList.add('hidden')
-  cover.hidden = true
+  flash.hidden = true
   foto.hidden = true
   foto.classList.remove('shrink')
   scatta.hidden = false
@@ -117,7 +119,7 @@ function reinitUI () {
 
 invia.addEventListener('click', () => {
   if (imgReady) {
-    loading.classList.remove('hidden')
+    loading.showModal()
     
     hq.toBlob(async (blob) => {
       const fd = new FormData()
@@ -130,12 +132,12 @@ invia.addEventListener('click', () => {
         })
       
         if (!res.ok) {
-          loading.classList.add('hidden')
-          error.classList.remove('hidden')
+          loading.close()
+          errDialog.showModal()
           
           try {
             const payload = await res.json()
-            errDescription.textContent = payload.message
+            errDescription.innerHTML = payload.message
             
             if (payload.message.includes('esaurito la memoria')) {
               resolution = {
@@ -144,22 +146,23 @@ invia.addEventListener('click', () => {
               }
             }
           } catch (jsonError) {
-            throw new Error(`Qualcosa è andato storto. Errore ${res.status} - ${res.statusText}`)
+            console.log(res)
+            throw new Error(`${res.status} - ${res.statusText}`)
           }
         } else {
           window.location.replace(corrUrl)
         }
       } catch (error) {
-        errDescription.textContent = error.message
+        errDescription.innerHTML = `Qualcosa è andato storto.<br>Dettagli errore: <em>${error}</em>`
       }
     })
   } else {
-    error.classList.remove('hidden')
+    errDialog.showModal()
     errDescription.textContent = 'Nessuna foto da leggere o la foto non è ancora pronta. Riprova tra poco.'
   }
 })
 
 errBtn.addEventListener('click', () => {
-  error.classList.add('hidden')
+  errDialog.close()
   reinitUI()
 })
