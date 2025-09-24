@@ -7,11 +7,26 @@
 {% endblock %}
 
 {% block content %}
-  <section class="corrispettivi-success">
-    <p class="text-big">Il corrispettivo è stato inserito con successo!</p>
+  <main class="corrispettivi-success">
+    <h1>Il corrispettivo è stato inserito con successo!</h1>
 
     <table>
+      <colgroup>
+        {% for i in range(6) %}
+          <col>
+        {% endfor %}
+        {% for i in range(5) %}
+          <col class="reparti-colgroup" span="2">
+        {% endfor %}
+      </colgroup>
+
       <thead>
+        <tr>
+          <td colspan="6"></td>
+          {% for i in range(5) %}
+            <th colspan="2" scope="colgroup">Reparto {{ i+1 }}</th>
+          {% endfor %}
+        </tr>
         <tr>
           <th scope="col">Data</th>
           <th scope="col">Mercato</th>
@@ -19,31 +34,121 @@
           <th scope="col">Inserito il</th>
           <th scope="col">Inserito da</th>
           <th scope="col">Cassa</th>
-          <th scope="col">Reparto 1</th>
-          <th scope="col">Reparto 2</th>
-          <th scope="col">Reparto 3</th>
-          <th scope="col">Reparto 4</th>
-          <th scope="col">Reparto 5</th>
+          {% for i in range(5) %}
+            <th scope="col">Quantità</th>
+            <th scope="col">Totale</th>
+          {% endfor %}
         </tr>
       </thead>
+
       <tbody>
-        <td>{{ inserted['data'] }}</td>
-        <td>{{ inserted['mercato'] }}</td>
-        <td>{{ inserted['giorno_mercato'] }}</td>
-        <td>{{ inserted['ts'] }}</td>
-        <td>{{ inserted['inserito_da'] }}</td>
-        <td>{{ inserted['cassa'] }}</td>
-        <td>{{ inserted['reparto1'] }}</td>
-        <td>{{ inserted['reparto2'] }}</td>
-        <td>{{ inserted['reparto3'] }}</td>
-        <td>{{ inserted['reparto4'] }}</td>
-        <td>{{ inserted['reparto5'] }}</td>
+        <tr>
+          <td>
+            <p class="card-title">Data</p>
+            <p>{{ inserted['data'] }}</p>
+          </td>
+
+          <td>
+            <p class="card-title">Mercato</p>
+            <p>{{ inserted['mercato'] }}</p>
+          </td>
+
+          <td>
+            <p class="card-title">Giorno del mercato</p>
+            <p>{{ inserted['giorno_mercato'] }}</p>
+          </td>
+
+          <td>
+            <p class="card-title">Inserito il</p>
+            <p>{{ inserted['ts'] }}</p>
+          </td>
+
+          <td>
+            <p class="card-title">Da</p>
+            <p>{{ inserted['inserito_da'] }}</p>
+          </td>
+
+          <td>
+            <p class="card-title">Cassa</p>
+            <p>{{ inserted['cassa'] }}</p>
+          </td>
+
+          <td class="reparti-td">
+            <p class="card-title">Reparto 1</p>
+            <span class="card-wrapper">
+              <p class="card-label">Quantità</p>
+              <p>{{ inserted['quantita1'] }}</p>
+            </span>
+          </td>
+          <td class="reparti-td">
+            <span class="card-wrapper">
+              <p class="card-label">Totale</p>
+              <p>{{ inserted['reparto1'] }} €</p>
+            </span>
+          </td>
+
+          <td class="reparti-td">
+            <p class="card-title">Reparto 2</p>
+            <span class="card-wrapper">
+              <p class="card-label">Quantità</p>
+              <p>{{ inserted['quantita2'] }}</p>
+            </span>
+          </td>
+          <td class="reparti-td">
+            <span class="card-wrapper">
+              <p class="card-label">Totale</p>
+              <p>{{ inserted['reparto2'] }} €</p>
+            </span>
+          </td>
+
+          <td class="reparti-td">
+            <p class="card-title">Reparto 3</p>
+            <span class="card-wrapper">
+              <p class="card-label">Quantità</p>
+              <p>{{ inserted['quantita3'] }}</p>
+            </span>
+          </td>
+          <td class="reparti-td">
+            <span class="card-wrapper">
+              <p class="card-label">Totale</p>
+              <p>{{ inserted['reparto3'] }} €</p>
+            </span>
+          </td>
+
+          <td class="reparti-td">
+            <p class="card-title">Reparto 4</p>
+            <span class="card-wrapper">
+              <p class="card-label">Quantità</p>
+              <p>{{ inserted['quantita4'] }}</p>
+            </span>
+          </td>
+          <td class="reparti-td">
+            <span class="card-wrapper">
+              <p class="card-label">Totale</p>
+              <p>{{ inserted['reparto4'] }} €</p>
+            </span>
+          </td>
+
+          <td class="reparti-td">
+            <p class="card-title">Reparto 5</p>
+            <span class="card-wrapper">
+              <p class="card-label">Quantità</p>
+              <p>{{ inserted['quantita5'] }}</p>
+            </span>
+          </td>
+          <td class="reparti-td">
+            <span class="card-wrapper">
+              <p class="card-label">Totale</p>
+              <p>{{ inserted['reparto5'] }} €</p>
+            </span>
+          </td>          
+        </tr>
       </tbody>
     </table>
 
-    <div class="btn-wrapper text-medium">
-      <a href="/corr/inserisci" class="global-btn success-btn">Nuovo</a>
-      <a href="/auth/logout" class="global-btn success-btn">Esci</a>
+    <div class="btn-wrapper">
+      <a href="{{ url_for('auth.logout') }}" class="global-btn">Esci</a>
+      <a href="{{ url_for('corr.inserisci') }}" class="global-btn">Nuovo</a>
     </div>
-  </section>
+  </main>
 {% endblock %}

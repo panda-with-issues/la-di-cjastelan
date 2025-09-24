@@ -43,22 +43,28 @@ select {
   font-size: 1rem;
 }
 
-table {
-  padding: .5em 0;
-  border-top: 2px solid var(--color-title);
-  border-bottom: 2px solid var(--color-title);
+thead,
+th {
+  display: none;
 }
 
-th {
-  padding: .5em 1em;
-  font-weight: bold;
-  color: var(--color-title);
-  text-align: left;
-  border-bottom: 1px solid var(--color-title);
+tr {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--color-title);
+  border-radius: 25px;
+  margin: 1rem 0;
+  padding: 2.5em 2em;
 }
 
 td {
-  padding: .5em 1em;
+  margin: .5em 0;
+}
+
+.card-title {
+  margin-bottom: .2em;
+  color: var(--color-title);
+  font-weight: bold;
 }
 
 .text-big {
@@ -125,6 +131,38 @@ td {
 @media only screen and (min-width: 480px) {
   html {
     font-size: 16px;
+  }
+
+  table {
+    padding: .5em 0;
+    border-top: 2px solid var(--color-title);
+    border-bottom: 2px solid var(--color-title);
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  td {
+    margin: 0;
+  }
+
+  tr {
+    display: table-row;
+    border: none;
+  }
+
+  th {
+    display: table-cell;
+    padding: .5em .8em;
+    font-weight: bold;
+    color: var(--color-title);
+    text-align: left;
+    border-bottom: 1px solid var(--color-title);
+  }
+
+  td {
+    padding: .5em .8em;
   }
   
   .global-logo {
