@@ -36,8 +36,8 @@ def inserisci():
         session.clear()
 
         inserted = { column.key: getattr(corrispettivo, column.key) for column in corrispettivo.__mapper__.columns }
-        inserted['data'] = datetime.datetime.strftime(inserted['data'], '%d-%m-%y')
-        inserted['ts'] = datetime.datetime.strftime(inserted['ts'], '%d-%m-%y %H:%M')
+        inserted['data'] = datetime.datetime.strftime(inserted['data'], '%d-%m-%Y')
+        inserted['ts'] = datetime.datetime.strftime(inserted['ts'], '%d-%m-%Y %H:%M')
 
         session['inserted'] = inserted
         session['username'] = user
@@ -47,7 +47,8 @@ def inserisci():
         db.session.rollback()
         e = e._message()
         if 'UNIQUE' in e and 'Corrispettivi.data' in e and 'Corrispettivi.mercato' in e:
-          error['message'] = f'Esiste già un corrispettivo per il mercato {corrispettivo.mercato} svoltosi il {corrispettivo.data}.'
+          error['message'] = f'Esiste già un corrispettivo per il mercato {corrispettivo.mercato} svoltosi il\
+          {datetime.datetime.strftime(corrispettivo.data, "%d-%m-%Y")}.'
         else:
           error['message'] = f'Errore di integrità nel database.<br>Dettagli errore: <em>{e}</em>.'
 
