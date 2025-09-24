@@ -1,7 +1,17 @@
 .error {
-  margin-left: var(--margin-left);
+  h1 {
+    font-weight: 400;
+  }
+
+  padding: var(--margin-left);
 
   p {
-    margin-top: 2em;
+    margin: 2em 0;
+  }
+}
+
+@media only screen and (min-width: 480px) {
+  .error h1 {
+    font-size: 2rem;
   }
 }
