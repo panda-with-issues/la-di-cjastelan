@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, flash, g, session, redirect, url_for
+    Blueprint, render_template, request, flash, g, session, redirect, url_for, abort
 )
 from sqlalchemy import or_, exc
 from app.database import db, Mercati, Corrispettivi
@@ -190,7 +190,11 @@ def validate_input(req, mercati):
 @bp.route('/success')
 @login_required
 def success():
-  inserted = session.pop('inserted')
+  inserted = session.get('inserted')
+  if not inserted:
+    abort(400, description="La sessione è scaduta o non si stava inserendo nessun corrispettivo.")
+  
+  session.pop('inserted')
   return render_template('corr/success.html', inserted=inserted)
 
 # if (session.get('to_insert')):
