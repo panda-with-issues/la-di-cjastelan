@@ -1,8 +1,9 @@
 from flask import (
-    Blueprint, render_template, request, flash, g, session, redirect, url_for, abort
+    Blueprint, render_template, request, g, session, redirect, url_for, abort
 )
 from sqlalchemy import or_, exc
 from app.database import db, Mercati, Corrispettivi
+from markupsafe import Markup
 import datetime
 import re
 import decimal
@@ -50,11 +51,11 @@ def inserisci():
           error['message'] = f'Esiste già un corrispettivo per il mercato {corrispettivo.mercato} svoltosi il\
           {datetime.datetime.strftime(corrispettivo.data, "%d-%m-%Y")}.'
         else:
-          error['message'] = f'Errore di integrità nel database.<br>Dettagli errore: <em>{e}</em>.'
+          error['message'] = Markup(f'Errore di integrità nel database.<br>Dettagli errore: <em>{e}</em>.')
 
       except exc.SQLAlchemyError as e:
         db.session.rollback()
-        error['message'] = f'Errore nel database.<br>Dettagli errore: <em>{e}</em>.'
+        error['message'] = Markup(f'Errore nel database.<br>Dettagli errore: <em>{e}</em>.')
  
   return render_template('corr/inserisci.html',
                          today = datetime.date.today(),
@@ -110,7 +111,7 @@ def validate_input(req, mercati):
   corrispettivo.cassa = cassa
 
   # reparti
-  reparti = [ k for k in request.form.keys() if 'reparto' in k ]
+  reparti = [ k for k in request.form if 'reparto' in k ]
   somma_reparti = 0
   for i, reparto in enumerate(reparti):
     try:
@@ -129,7 +130,7 @@ def validate_input(req, mercati):
       error[f'reparto{i+1}'] = f'Valore invalido per il totale del Reparto {i+1}.'
 
   # quantità
-  quantitas = [ k for k in request.form.keys() if 'quantita' in k ]
+  quantitas = [ k for k in request.form if 'quantita' in k and 'totale' not in k ]
   somma_quantita = 0
   for i, quantita in enumerate(quantitas):
     try:
@@ -178,7 +179,7 @@ def validate_input(req, mercati):
       error['quantita3'] = error['quantita3'] if 'quantita3' in error else ''
       error['quantita4'] = error['quantita4'] if 'quantita4' in error else ''
       error['quantita5'] = error['quantita5'] if 'quantita5' in error else ''
-      error['quantita_totale'] = 'La somma delle quantita dei reparti non coincide col n. pezzi.'
+      error['quantita_totale'] = 'La somma delle quantità dei reparti non coincide col n. pezzi.'
   
   except:
     error['quantita_totale'] = 'Valore invalido per il totale.'
@@ -197,6 +198,13 @@ def success():
   
   session.pop('inserted')
   return render_template('corr/success.html', inserted=inserted)
+
+@bp.post('/ocr')
+@login_required
+def ocr():
+  for name, val in request.form.items():
+    session[name] = val
+  return render_template('ocr.html')
 
 # if (session.get('to_insert')):
 #    session.pop('to_insert')

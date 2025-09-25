@@ -1,11 +1,10 @@
 import easyocr
 import re
 from datetime import datetime
-from PIL import Image
 import cv2
 import numpy as np
 from flask import (
-    Blueprint, render_template, request, flash, jsonify, session
+    Blueprint, render_template, request, jsonify, session, redirect, url_for
 )
 from torch.cuda import OutOfMemoryError
 from app.auth import login_required
@@ -13,15 +12,53 @@ from app.auth import login_required
 reader = easyocr.Reader(['it'])
 bp = Blueprint('ocr', __name__, url_prefix='/ocr')
 
-@bp.route('/')
+@bp.route('/', methods=('GET', 'POST'))
 @login_required
 def ocr():
-  result = ''
-  if 'ocr_result' in session.keys():
-    result = session.pop('ocr_result')
-    import json
-    result = f'{result}\n\n {json.dumps(parse_ocr_result(result))}'
-  return render_template('ocr.html', result=result)
+  if request.method == 'POST':
+    if 'image' not in request.files:
+      return jsonify({
+        'message': 'Nessuna immagine inviata'
+      }), 400
+    
+    f = request.files['image']
+
+    if f.filename != 'tmp-img.png' or f.mimetype != 'image/png':
+      return jsonify({
+        'message': 'Formato immagine non supportato'
+      }), 400
+
+    try:
+      img = cv2.imdecode(np.frombuffer(f.read(), np.uint8), cv2.IMREAD_COLOR)
+      result = reader.readtext(img, detail=0)
+
+      if not result:
+        return {
+          'message': "Impossibile leggere l'immagine."
+        }, 500
+      
+      parsed = parse_ocr_result(result)
+
+      read = []
+      for name, val in parsed.items():
+        read.append(name)
+        session[name] = val
+      session['ocr_read'] = read
+
+      return redirect(url_for('corr.inserisci'))
+    
+    except OutOfMemoryError:
+      return jsonify({
+        'message': 'Immagine troppo grande: la GPU ha esaurito la memoria. La qualità della foto sarà automaticamente\
+          ridotta per il prossimo tentativo. Riprova.'
+      }), 500
+    
+    except Exception as e:
+      return jsonify({
+        'message': f"Errore durante l'elaborazione dell'immagine. Dettagli: <em>{e}</em>"
+      }), 500
+    
+  return render_template('ocr.html')
 
 def parse_ocr_result(lst):
   i = 0
@@ -118,56 +155,21 @@ def parse_float(word):
   except ValueError:
     return 0
 
+# codice per salvare l'immagine sul server
 
-@bp.route('cattura', methods=('GET', 'POST'))
-@login_required
-def cattura():
-  if request.method == 'POST':
-    if 'image' not in request.files:
-      return jsonify({
-        'message': 'Nessuna immagine inviata'
-      }), 400
-    
-    blob = request.files['image']
-
-    if blob.filename != 'tmp-img.png' or blob.mimetype != 'image/png':
-      return jsonify({
-        'message': 'Formato immagine non supportato'
-      }), 400
-
-    try:
-      img = cv2.imdecode(np.frombuffer(blob.read(), np.uint8), cv2.IMREAD_COLOR)
-      result = reader.readtext(img, detail=0)
-      session['ocr_result'] = result
-      return jsonify({
-        'status': 'ok',
-      })
-    except OutOfMemoryError:
-      return jsonify({
-        'message': 'Immagine troppo grande: la GPU ha esaurito la memoria. La qualità della foto sarà automaticamente ridotta per il prossimo tentativo. Riprova.'
-      }), 500
-    except Exception as e:
-      return jsonify({
-        'message': f"Errore durante l'elaborazione dell'immagine. Dettagli: <em>{e}</em>"
-      }), 500
-    
-  return render_template('cattura.html')
-
-      # codice per salvare l'immagine sul server
-
-      # import os
-      # from flask import current_app
-      # fname = os.path.join(current_app.instance_path, 'uploads', datetime.strftime(datetime.now(), '%y-%m-%d_%H:%M:%S.png'))
-      # try:
-      #   with open(fname, "wb") as f:
-      #     f.write(decoded)
-      #     #session['image'] = fname
-      #   return jsonify({
-      #     'status': 'ok',
-      #     'filename': fname
-      #   })
-      # except Exception as e:
-      #   return jsonify({
-      #     'status': 'fail',
-      #     'message': e
-      #   })
+# import os
+# from flask import current_app
+# fname = os.path.join(current_app.instance_path, 'uploads', datetime.strftime(datetime.now(), '%y-%m-%d_%H:%M:%S.png'))
+# try:
+#   with open(fname, "wb") as f:
+#     f.write(decoded)
+#     #session['image'] = fname
+#   return jsonify({
+#     'status': 'ok',
+#     'filename': fname
+#   })
+# except Exception as e:
+#   return jsonify({
+#     'status': 'fail',
+#     'message': e
+#   })

@@ -23,9 +23,21 @@ if (errors.length) {
 }
 
 inputs.forEach(el => {
+  if (el.name.includes('reparto') || el.name === 'totale') {
+    el.value = parseFloat(el.value).toFixed(2)
+  }
+
   el.addEventListener('change', e => {
     if (el.classList.contains('input-error')) {
       el.classList.remove('input-error')
+    }
+
+    if (el.classList.contains('ocr-input')) {
+      el.classList.remove('ocr-input')
+    }
+
+    if (el.name.includes('reparto') || el.name === 'totale') {
+      el.value = parseFloat(el.value).toFixed(2)
     }
   })
 })

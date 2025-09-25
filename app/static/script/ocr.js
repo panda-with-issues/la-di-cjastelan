@@ -126,7 +126,7 @@ invia.addEventListener('click', () => {
       fd.append('image', blob, 'tmp-img.png')
 
       try {
-        const res = await fetch(catturaEndpoint, {
+        const res = await fetch(ocrEndpoint, {
           method: 'POST',
           body: fd
         })
@@ -141,7 +141,7 @@ invia.addEventListener('click', () => {
             
             if (payload.message.includes('esaurito la memoria')) {
               resolution = {
-                width: { ideal: 2048},
+                width: { ideal: 2048 },
                 height: { ideal: 2048 }
               }
             }
@@ -149,8 +149,10 @@ invia.addEventListener('click', () => {
             console.log(res)
             throw new Error(`${res.status} - ${res.statusText}`)
           }
+        } else if (!res.redirected) {
+          throw new Error(`Risposta del server non valida. Risposta HTTP: ${res.status} - ${res.statusText}`)
         } else {
-          window.location.replace(corrUrl)
+          window.location.replace(res.url)
         }
       } catch (error) {
         errDescription.innerHTML = `Qualcosa è andato storto.<br>Dettagli errore: <em>${error}</em>`

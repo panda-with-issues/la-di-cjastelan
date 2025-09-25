@@ -36,7 +36,6 @@ def create_app():
       'error.html',
       error_code = e.code,
       error_name = e.name,
-      error_description = e.description,
-      url=request.referrer), e.code
+      error_description = e.description), e.code
   
   return app

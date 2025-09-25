@@ -10,16 +10,15 @@
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/reset.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles/cattura.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/ocr.css')}}">
 
-  <script src="{{ url_for('static', filename='script/cattura.js')}}" defer></script>
+  <script src="{{ url_for('static', filename='script/ocr.js')}}" defer></script>
   <script src="https://kit.fontawesome.com/9f6b895217.js" crossorigin="anonymous"></script>
   <script>
-    const catturaEndpoint = {{ url_for('ocr.cattura')|tojson }}
-    const corrUrl = {{ url_for('ocr.ocr')|tojson }}
+    const ocrEndpoint = {{ url_for('ocr.ocr')|tojson }}
   </script>
 
-  <title>Là di Cjastelan | Cattura</title>
+  <title>Là di Cjastelan | Scansiona</title>
 </head>
 
 <body>

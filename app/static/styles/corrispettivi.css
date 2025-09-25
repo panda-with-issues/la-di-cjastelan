@@ -56,6 +56,10 @@
     }
   }
 
+  .ocr-input {
+    background-color: lightyellow;
+  }
+
   .totali label {
     font-weight: bold;
   }
@@ -91,6 +95,13 @@
       width: auto;
     }
   }
+}
+
+.ocr-btn {
+  display: block;
+  margin: 3em auto 0;
+  width: fit-content;
+  font-size: 1.2rem;
 }
 
 dialog {
@@ -216,6 +227,10 @@ dialog {
     table {
       margin-bottom: 5em;
     }
+  }
+
+  .ocr-button {
+    display: none;
   }
 
   tr:first-child > th {
