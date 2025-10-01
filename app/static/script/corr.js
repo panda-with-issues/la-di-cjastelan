@@ -23,7 +23,7 @@ if (errors.length) {
 }
 
 inputs.forEach(el => {
-  if (el.name.includes('reparto') || el.name === 'totale') {
+  if (el.value && (el.name.includes('reparto') || el.name === 'totale')) {
     el.value = parseFloat(el.value).toFixed(2)
   }
 
