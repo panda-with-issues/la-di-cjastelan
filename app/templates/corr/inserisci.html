@@ -19,6 +19,10 @@
 
 {% block content %}
   <main>
+    <form enctype="multipart/form-data" action="{{ url_for('ocr.ocr') }}" method="post" id="diosanto">
+      <input type="file" name="image" id="cattura" accept="image/*" capture="environment">
+      <input type="number" name="start" id="start" hidden>
+    </form>
     <form action="{{ url_for('corr.inserisci')}}" class="corrispettivi-inserisci" method="POST">
 
       <button type="submit" class="global-btn ocr-btn" formaction="{{ url_for('corr.ocr') }}" formnovalidate>

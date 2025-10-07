@@ -60,6 +60,24 @@ function getStream (resolution) {
   })
 }
 
+async function configureImageCapture (track) {
+  const caps = track.getCapabilities()
+  const constr = track.getConstraints()
+  console.log(caps)
+  console.log(constr)
+  
+  const opts = {}
+  if ('exposureMode' in caps) {
+    opts.exposureMode = 'continuous'
+  }
+  if ('whiteBalanceMode' in caps) {
+    opts.whiteBalanceMode = 'continuous'
+  }
+  console.log(opts)
+
+  track.applyConstraints(opts)
+}
+
 video.addEventListener('loadedmetadata', e => {
   hq.width = video.videoWidth
   hq.height = video.videoHeight

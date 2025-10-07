@@ -96,3 +96,12 @@ function removeBlank (e) {
 //     }
 //   }, 100)
 // }
+
+const diosanto = document.getElementById('diosanto')
+const cattura = document.getElementById('cattura')
+const start = document.getElementById('start')
+
+cattura.addEventListener('change', () => {
+  start.value = Date.now() / 1000
+  diosanto.submit()
+})
