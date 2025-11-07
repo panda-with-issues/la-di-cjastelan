@@ -1,0 +1,13 @@
+[project]
+name = "app"
+version = "1.0.0"
+description = "Gestionale per inserimento di corrispettivi e visualizzazione di dati per l'azienda Là di Cjastelan"
+dependencies = [
+    "easyocr",
+    "flask",
+    "flask-sqlalchemy",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
