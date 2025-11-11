@@ -7,11 +7,12 @@
 {% endblock %}
 
 {% block script %}
-<script defer>
-  const mercati = {{ mercati|tojson }}
-  const session = {{ session|tojson }}
-  const serverError = {{ error|tojson }}
-  // const confirmation = { confirmation|tojson }}
+  <script defer>
+    const mercati = {{ mercati|tojson }}
+    const session = {{ session|tojson }}
+    const serverError = {{ error|tojson }}
+    const ocrEndpoint = {{ url_for('ocr.ocr') }}
+    // const confirmation = { confirmation|tojson }}
   </script>
   <script src="{{url_for('static', filename='script/corr.js')}}" defer></script>
   <script src="https://kit.fontawesome.com/9f6b895217.js" crossorigin="anonymous"></script>
@@ -19,25 +20,22 @@
 
 {% block content %}
   <main>
-    <form enctype="multipart/form-data" action="{{ url_for('ocr.ocr') }}" method="post" id="diosanto">
-      <input type="file" name="image" id="cattura" accept="image/*" capture="environment">
-      <input type="number" name="start" id="start" hidden>
-    </form>
-    <form action="{{ url_for('corr.inserisci')}}" class="corrispettivi-inserisci" method="POST">
-
-      <button type="submit" class="global-btn ocr-btn" formaction="{{ url_for('corr.ocr') }}" formnovalidate>
+    <form enctype="multipart/form-data" id="ocr-form">
+      <label for="ocr" class="global-btn ocr-btn">
         <!-- Icona FontAwesome fotocamera -->
         <i class="fa-regular fa-camera"></i>
         Scansiona
-      </button>
+      </label>
+      <input type="file" name="image" accept="image/*" capture="environment"  id="ocr">
+    </form>
+
+    <form action="{{ url_for('corr.inserisci')}}" class="corrispettivi-inserisci" method="POST">
 
       <fieldset>
         <legend>Mercato</legend>
 
         <label for="data">Data</label>
-        <input class="{{ 'ocr-input' if 'data' in session['ocr_read'] else '' }}"
-          type="date" name="data" max="{{ today }}" value="{{ session['data'] }}" id="data" required
-        >
+        <input type="date" name="data" max="{{ today }}" value="{{ session['data'] if session['data'] else today }}" id="data" required>
 
         <label for="mercato">Mercato</label>
         <select name="mercato" id="mercato" required>
@@ -83,85 +81,61 @@
         <p>Reparto 1</p>
         <label>
           Quantità:
-          <input class="{{ 'ocr-input' if 'quantita1' in session['ocr_read'] else '' }}"
-          type="number" name="quantita1" min="0" step="1" value="{{ session['quantita1'] }}" placeholder="0"
-          >
+          <input type="number" name="quantita1" min="0" step="1" value="{{ session['quantita1'] }}" placeholder="0">
         </label>
         <label>
           Totale:
-          <input class="{{ 'ocr-input' if 'reparto1' in session['ocr_read'] else '' }}"
-            type="number" min="0" step="0.01" name="reparto1" value="{{ session['reparto1'] }}" placeholder="0,00"
-          >
+          <input type="number" min="0" step="0.01" name="reparto1" value="{{ session['reparto1'] }}" placeholder="0,00">
         </label>
 
         <p>Reparto 2</p>
         <label>
           Quantità:
-          <input class="{{ 'ocr-input' if 'quantita2' in session['ocr_read'] else '' }}"
-            type="number" name="quantita2" min="0" step="1" value="{{ session['quantita2'] }}" placeholder="0"
-          >
+          <input type="number" name="quantita2" min="0" step="1" value="{{ session['quantita2'] }}" placeholder="0">
         </label>
         <label>
           Totale:
-          <input class="{{ 'ocr-input' if 'reparto2' in session['ocr_read'] else '' }}"
-            type="number" min="0" step="0.01" name="reparto2" value="{{ session['reparto2'] }}" placeholder="0,00"
-          >
+          <input type="number" min="0" step="0.01" name="reparto2" value="{{ session['reparto2'] }}" placeholder="0,00">
         </label>
         
         <p>Reparto 3</p>
         <label>
           Quantità:
-          <input class="{{ 'ocr-input' if 'quantita3' in session['ocr_read'] else '' }}"
-            type="number" name="quantita3" min="0" step="1" value="{{ session['quantita3'] }}" placeholder="0"
-          >
+          <input type="number" name="quantita3" min="0" step="1" value="{{ session['quantita3'] }}" placeholder="0">
         </label>
         <label>
           Totale:
-          <input class="{{ 'ocr-input' if 'reparto3' in session['ocr_read'] else '' }}"
-            type="number" min="0" step="0.01" name="reparto3" value="{{ session['reparto3'] }}" placeholder="0,00"
-          >
+          <input type="number" min="0" step="0.01" name="reparto3" value="{{ session['reparto3'] }}" placeholder="0,00">
         </label>
 
         <p>Reparto 4</p>
         <label>
           Quantità:
-          <input class="{{ 'ocr-input' if 'quantita4' in session['ocr_read'] else '' }}"
-            type="number" name="quantita4" min="0" step="1" value="{{ session['quantita4'] }}" placeholder="0"
-          >
+          <input type="number" name="quantita4" min="0" step="1" value="{{ session['quantita4'] }}" placeholder="0">
         </label>
         <label>
           Totale:
-          <input class="{{ 'ocr-input' if 'reparto4' in session['ocr_read'] else '' }}"
-            type="number" min="0" step="0.01" name="reparto4" value="{{ session['reparto4'] }}" placeholder="0,00"
-          >
+          <input type="number" min="0" step="0.01" name="reparto4" value="{{ session['reparto4'] }}" placeholder="0,00">
         </label>
 
         <p>Reparto 5</p>
         <label>
           Quantità:
-          <input class="{{ 'ocr-input' if 'quantita5' in session['ocr_read'] else '' }}"
-            type="number" name="quantita5" min="0" step="1" value="{{ session['quantita5'] }}" placeholder="0"
-          >
+          <input type="number" name="quantita5" min="0" step="1" value="{{ session['quantita5'] }}" placeholder="0">
         </label>
         <label>
           Totale
-          <input class="{{ 'ocr-input' if 'reparto5' in session['ocr_read'] else '' }}"
-            type="number" min="0" step="0.01" name="reparto5" value="{{ session['reparto5'] }}" placeholder="0,00"
-          >
+          <input type="number" min="0" step="0.01" name="reparto5" value="{{ session['reparto5'] }}" placeholder="0,00">
         </label>
       
         <div class="totali">
           <label>
             N. pezzi:
-            <input class="{{ 'ocr-input' if 'quantita_totale' in session['ocr_read'] else '' }}"
-              type="number" name="quantita_totale" min="0" step="1" value="{{ session['quantita_totale'] }}" required
-            >
+            <input type="number" name="quantita_totale" min="0" step="1" value="{{ session['quantita_totale'] }}" id="quantita_totale" required>
           </label>
           <label>
             Totale:
-            <input class="{{ 'ocr-input' if 'totale' in session['ocr_read'] else '' }}"
-              type="number" min="0" step="0.01" name="totale" value="{{ session['totale'] }}" required
-            >
+            <input type="number" min="0" step="0.01" name="totale" value="{{ session['totale'] }}" id="totale" required>
           </label>
         </div>
       </fieldset>
@@ -174,8 +148,15 @@
     <h2 class="global-error">Errore</h2>
     {% for key in error %}
       <p>{{ error[key] }}</p>
-    {% endfor %}    
+    {% endfor %}
+    <p id="error-message" hidden></p>    
     <form method="dialog"><button class="global-btn">Ok</button></form>
+  </dialog>
+
+  <dialog id="loading">
+    <!-- Icona FontAwesome spinner -->
+    <i class="fa-solid fa-spinner fa-spin"></i>
+    <p>Sto leggendo...</p>
   </dialog>
 {% endblock %}
 

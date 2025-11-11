@@ -1,8 +1,12 @@
+ input[type="file"] {
+  display: none;
+ }
+
 .corrispettivi-inserisci {
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  
   fieldset {
     display: flex;
     flex-direction: column;
@@ -129,6 +133,18 @@ dialog {
   }
 }
 
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+#loading {
+  .fa-spinner {
+    font-size: 5rem;
+    color: var(--color-title);
+    margin-bottom: 2rem;
+  }
+}
+
 /* .confirmation {
   position: absolute;
   top: 10vh;
@@ -215,6 +231,9 @@ dialog {
 }
 
 @media only screen and (min-width: 480px) {
+  #ocr-form {
+    display: none;
+  }
   .corrispettivi-success {
     padding: 5em;
 

@@ -47,10 +47,10 @@ function getStream (resolution) {
     stream = s
     video.srcObject = s
 
-    if ('ImageCapture' in window) {
-      const track = s.getVideoTracks()[0]
-      imageCapture = new ImageCapture(track)
-    }
+    // if ('ImageCapture' in window) {
+    //   const track = s.getVideoTracks()[0]
+    //   imageCapture = new ImageCapture(track)
+    // }
   })
   .catch(error => {
     errDialog.showModal()
@@ -61,11 +61,7 @@ function getStream (resolution) {
 }
 
 async function configureImageCapture (track) {
-  const caps = track.getCapabilities()
-  const constr = track.getConstraints()
-  console.log(caps)
-  console.log(constr)
-  
+  const caps = track.getCapabilities() 
   const opts = {}
   if ('exposureMode' in caps) {
     opts.exposureMode = 'continuous'
@@ -73,7 +69,6 @@ async function configureImageCapture (track) {
   if ('whiteBalanceMode' in caps) {
     opts.whiteBalanceMode = 'continuous'
   }
-  console.log(opts)
 
   track.applyConstraints(opts)
 }
@@ -196,7 +191,6 @@ invia.addEventListener('click', async () => {
     if (imageCapture) {
       fd.append('imageCapure', true)
     }
-    fd.append('start', Date.now() / 1000)
 
     try {
       const res = await fetch(ocrEndpoint, {

@@ -96,7 +96,7 @@ def validate_input(req, mercati):
   if (weekdays[corrispettivo.data.weekday()] != corrispettivo.giorno_mercato):
     error['data'] = error['data'] if 'data' in error else ''
     error['giorno_mercato'] = error['giorno_mercato'] if 'giorno_mercato' in error else ''
-    error['message'] = f'Il {datetime.datetime.strftime(corrispettivo.data, "%d-%m-%y")} non era {corrispettivo.giorno_mercato.lower()}.'
+    error['data-giorno'] = f'Il {datetime.datetime.strftime(corrispettivo.data, "%d-%m-%y")} non era {corrispettivo.giorno_mercato.lower()}.'
   
   # controlliamo che il mercato sia attuale. Dovrebbe essere già garantito dalla query su 'mercati'
   mercato = db.session.scalar(db.select(Mercati).where(Mercati.nome == mercato and Mercati.giorno == giorno_mercato))
