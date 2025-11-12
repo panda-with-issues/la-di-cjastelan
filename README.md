@@ -32,4 +32,4 @@ pip install pandas matplotlib seaborn
 
 Tutti i DataFrame sono salvati in file `.pickle` che vengono trasmessi a parte, nel caso in cui si volessero fare operazioni sopra. Anche le immagini del test set sono trasmesse a parte e, se si vuole eseguire il codice all'interno del notebook, occorre piazzare i pickle nella cartella `instance/ocr-pickles` e le immagini nella cartella `instance/test-set`.
 
-La relazione riguardo il progetto d'esame è tutta dentro il file `Ocr_benchmark.ipynb`. La relazione che spiega in modo consuntivo cosa è stato sviluppato è nel file `relazione_integrazione.ipynb`.
+La relazione riguardo il progetto d'esame è tutta dentro il file `relazione_iot.ipynb`. La relazione che spiega in modo consuntivo cosa è stato sviluppato è nel file `relazione_integrazione.ipynb`.
