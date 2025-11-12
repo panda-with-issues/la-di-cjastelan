@@ -24,6 +24,12 @@ Le relazioni sul lavoro effettuato sono state redatte su dei notebook Jupyter. P
 pip install notebook
 ```
 
+e poi avviare il server con
+
+```
+jupyter notebook
+```
+
 Se si vuole eseguire il codice all'interno dei notebook (non dovrebbe essercene bisogno), occorre installare anche Pandas, Matplotlib e Seaborn
 
 ```
