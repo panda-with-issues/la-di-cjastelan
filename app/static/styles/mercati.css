@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  margin-top: 2rem;
+  
   .gray {
     color: #666;
   }
@@ -19,12 +20,18 @@
     margin: 2em 0;
   }
 
-  td:nth-last-child(-n+3):not(:first-child) {
+  td:last-child {
     text-align: center;
   }
 
-  tr:nth-child(even):not(:last-child) {
-    background-color: var(--color-bg);
+  .card-title-wrapper {
+    display:flex;
+    gap: 1em;
+  }
+
+  input,
+  select {
+    padding: .25em .5em;
   }
 
   .add {
@@ -37,30 +44,102 @@
   }
 
   .add-btn {
-    font-weight: bold;
+    width: 110px;
     font-size: 1em;
     color: #fff;
     background-color: var(--color-title);
     border-radius: 5px;
     padding: .2em .4em;
     border: none;
-  }
-
-  .add-btn:hover {
-    cursor: pointer;
+    
+    &::after {
+      content: ' Salva';
+    }
   }
 
   .abort-btn {
+    display: inline-block;
+    width: 110px;
+    margin-left: 2em;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
     color: #fff;
     background-color: red;
     border-radius: 5px;
-    padding: .2em .45em;
+    padding: .25em .4em;
+
+    &::after {
+      content: ' Annulla';
+    }
+  }
+
+  .fa-pen-to-square {
+    width: 8em;
+    color: #fff;
+    background-color: var(--color-title);
+    border-radius: 5px;
+    padding: .4em 0;
+
+    &::after {
+      content: ' Modifica';
+    }
   }
 
   .highlight {
     animation: highlight 2s ease-out;
+  }
+}
+
+@media only screen and (min-width: 480px) {
+  td {
+    padding: 1em .8em;
+  }
+
+  td:nth-last-child(-n+3):not(:first-child) {
+    text-align: center;
+  }
+
+  tr:nth-child(even):not(:last-child) {
+    background-color: var(--color-bg);
+  }
+
+  .mercati {
+    .card-title-wrapper {
+      display: block;
+    }
+
+    .fa-pen-to-square {
+      width: auto;
+      padding: 0;
+      color: var(--color-title);
+      background-color: unset;
+
+      &::after {
+        content: '';
+      }
+    }
+
+    .add-btn {
+      width: unset;
+      font-weight: bold;
+      
+      &:hover {
+        cursor: pointer;
+      }
+
+      &::after {
+        content: '';
+      }
+    }
+
+    .abort-btn {
+      width: unset;
+      margin-left: 1em;
+      font-weight: bold;
+      
+      &::after {
+        content: '';
+      }
+    }
   }
 }
 

@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-  <article class="mercati">
+  <main class="mercati">
     <h1>Mercati</h1>
 
     {% if session['add_mode'] or session['edit_id'] %}
@@ -33,11 +33,13 @@
         {% for mercato in mercati %}
           <!-- Riga se siamo in edit mode -->
           {% if session['edit_id'] and mercato.nome == session['edit_id'][0] and mercato.giorno == session['edit_id'][1] %}
-            <tr>
+            <tr id="{{ mercato.nome }}-{{ mercato.giorno }}">
               <td>
+                <p class="card-title">Nome</p>
                 <input type="text" name="nome" value="{{ mercato.nome }}" form="add-form" required>
               </td>
               <td>
+                <p class="card-title">Giorno</p>
                 <select name="giorno" form="add-form" required>
                   {% for giorno in [ 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica' ] %}
                     <option
@@ -51,15 +53,17 @@
                 </select>
               </td>
               <td>
+                <p class="card-title">Attuale</p>
                 <input type="checkbox" name="is_attuale" value="True" form="add-form" {% if mercato.is_attuale %} checked {% endif %}>
               </td>
               <td>
+                <p class="card-title">Evento</p>
                 <input type="checkbox" name="is_evento" value="True" form="add-form" {% if mercato.is_evento %} checked {% endif %}>
               </td>
               <td>
                 <button class="add-btn" type="submit" form="add-form">+</button>
                 <!-- croce rossa -->
-                <a href="{{ url_for('mercati.edit_mode', nome=1, giorno=1) }}" class="abort-btn">&times;</a>
+                <a href="{{ url_for('mercati.abort_edit') }}" class="abort-btn">&times;</a>
               </td>
             </tr>
           {% else %}
@@ -68,28 +72,37 @@
               {% if mercato.nome == new_nome and mercato.giorno == new_giorno %}
                 class="highlight"
               {% endif %}
+              id="{{ mercato.nome }}-{{ mercato.giorno }}"
             >
               <td>
+                <p class="card-title">Nome</p>
                 {{ mercato.nome }}
               </td>
               <td>
+                <p class="card-title">Giorno</p>
                 {{ mercato.giorno }}
               </td>
               <td>
-                {% if mercato.is_attuale == None %}
-                {% elif mercato.is_attuale %}
-                  <!-- tick verde -->
-                  <span class="green">&#x2714;</span>
-                {% else %}
-                  <!-- croce rossa -->
-                  <span class="red">&#x2716;</span>
-                {% endif %}
+                <div class="card-title-wrapper">
+                  <p class="card-title">Attuale</p>
+                  {% if mercato.is_attuale == None %}
+                  {% elif mercato.is_attuale %}
+                    <!-- tick verde -->
+                    <span class="green">&#x2714;</span>
+                  {% else %}
+                    <!-- croce rossa -->
+                    <span class="red">&#x2716;</span>
+                  {% endif %}
+                </div>
               </td>
               <td>
-                {% if mercato.is_evento %}
-                  <!-- tick verde -->
-                  <span class="green">&#x2714;</span>
-                {% endif %}
+                <div class="card-title-wrapper">
+                  <p class="card-title">Evento</p>
+                  {% if mercato.is_evento %}
+                    <!-- tick verde -->
+                    <span class="green">&#x2714;</span>
+                  {% endif %}
+                </div>
               </td>
               <td>
                 <!-- Icona modifica FontAwesome -->
@@ -103,11 +116,13 @@
 
         {% if session['add_mode'] %}
         <!-- Riga di inserimento nuovo mercato -->
-          <tr>
+          <tr id="new">
             <td>
+              <p class="card-title">Nome</p>
               <input type="text" name="nome" value="{{ session['nome'] }}" form="add-form" required>
             </td>
             <td>
+              <p class="card-title">Giorno</p>
               <select name="giorno" form="add-form" required>
                 {% for giorno in [ 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica' ] %}
                   <option
@@ -121,15 +136,17 @@
               </select>
             </td>
             <td>
+              <p class="card-title">Attuale</p>
               <input type="checkbox" name="is_attuale" value="True" form="add-form" {% if session['is_attuale'] %} checked {% endif %}>
             </td>
             <td>
+              <p class="card-title">Evento</p>
               <input type="checkbox" name="is_evento" value="True" form="add-form" {% if session['is_evento'] %} checked {% endif %}>
             </td>
             <td>
               <button class="add-btn" type="submit" form="add-form">+</button>
               <!-- croce rossa -->
-              <a href="{{ url_for('mercati.add_mode') }}" class="abort-btn">&times;</a>
+              <a href="{{ url_for('mercati.abort_add') }}" class="abort-btn">&times;</a>
             </td>
           </tr>
 
@@ -146,5 +163,5 @@
     {% for message in get_flashed_messages() %}
       <span class="global-error text-medium">{{ message }}</span>
     {% endfor %}
-  </article>
+  </main>
 {% endblock %}

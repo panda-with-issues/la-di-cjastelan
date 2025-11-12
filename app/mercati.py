@@ -7,7 +7,7 @@ from sqlalchemy import exc
 
 bp = Blueprint('mercati', __name__, url_prefix='/mercati')
 
-@bp.route('/visualizza', methods=('GET', 'POST'))
+@bp.route('/', methods=('GET', 'POST'))
 @login_required
 @admin_required
 def visualizza():
@@ -69,7 +69,7 @@ def visualizza():
     
   return render_template('mercati.html', mercati=mercati, new_nome=new_nome, new_giorno=new_giorno)
 
-@bp.route('/visualizza/add-mode')
+@bp.route('/add')
 @login_required
 @admin_required
 def add_mode():
@@ -78,15 +78,18 @@ def add_mode():
 
   add_mode = session.get('add_mode')
   if add_mode:
+    # ci siamo arrivati dopo aver eseguito con successo un inserimento
     user = session['username']
     inserted = session.get('inserted')
     session.clear()
     session['username'] = user
     if inserted:
       session['inserted'] = inserted
-  else:
-    session['add_mode'] = True
-  return redirect(url_for('mercati.visualizza'))
+      return redirect(url_for('mercati.visualizza') + f'#{inserted[0]}-{inserted[1]}')
+  
+  # altrimenti stiamo entrando in add mode
+  session['add_mode'] = True
+  return redirect(url_for('mercati.visualizza') + '#new')
 
 def validate_input(form):
   nome = form['nome'].capitalize()
@@ -120,6 +123,16 @@ def validate_input(form):
   
   return None, mercato
 
+@bp.route('add/abort')
+@login_required
+@admin_required
+def abort_add():
+  if 'add_mode' not in session:
+    return redirect(url_for('mercati.visualizza'))
+  
+  session.pop('add_mode')
+  return redirect(url_for('mercati.visualizza'))
+
 @bp.route('edit/<nome>/<giorno>')
 @login_required
 @admin_required
@@ -131,6 +144,16 @@ def edit_mode(nome, giorno):
     user = session['username']
     session.clear()
     session['username'] = user
-  else:
-    session['edit_id'] = (nome, giorno)
-  return redirect(url_for('mercati.visualizza'))
+  
+  session['edit_id'] = (nome, giorno)
+  return redirect(url_for('mercati.visualizza') + f'#{nome}-{giorno}')
+
+@bp.route('edit/abort')
+@login_required
+@admin_required
+def abort_edit():
+  if 'edit_id' not in session:
+    return redirect(url_for('mercati.visualizza'))
+  
+  nome, giorno = session.pop('edit_id')
+  return redirect(url_for('mercati.visualizza') + f'#{nome}-{giorno}')
