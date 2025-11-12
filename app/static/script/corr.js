@@ -17,11 +17,13 @@ const reps = Array.from(inputs).filter(el => el.name.includes('reparto'))
 const quants = Array.from(inputs).filter(el => el.name.includes('quantita'))
 
 // const confirmationArticle = document.querySelector('.confirmation')
+
 const defaultChildren = [ ...giornoInput.children ]
 defaultChildren.forEach(opt => {
   opt.selected = false
 })
 
+// evidenziamo nell'interfaccia gli errori segnalati dal server
 const errors = Object.keys(serverError)
 if (errors.length) {
   errDialog.showModal()
@@ -39,10 +41,6 @@ errDialog.addEventListener('close', e => {
 })
 
 inputs.forEach(el => {
-  if (el.value && (el.name.includes('reparto') || el.name === 'totale')) {
-    el.value = parseFloat(el.value).toFixed(2)
-  }
-
   el.addEventListener('change', e => {
     if (el.classList.contains('input-error')) {
       if (serverError?.totale === 'La somma dei reparti non coincide col totale.'
@@ -67,16 +65,23 @@ inputs.forEach(el => {
       el.classList.remove('input-error')
     }
 
+    // rimuoviamo l'evidenziazione dell'OCR se l'utente corregge il valore
     if (el.classList.contains('ocr-input')) {
       el.classList.remove('ocr-input')
     }
 
+    // imponiamo le due cifre decimali
     if (el.name.includes('reparto') || el.name === 'totale') {
       el.value = parseFloat(el.value).toFixed(2)
     }
   })
+
+  if (el.value && (el.name.includes('reparto') || el.name === 'totale')) {
+    el.value = parseFloat(el.value).toFixed(2)
+  }
 })
 
+// gestiamo dinamicamente l'elenco dei giorni in base al mercato selezionato
 mercatoInput.addEventListener('change', filter_giorni)
 mercatoInput.addEventListener('change', removeBlank, {once: true})
 
@@ -120,6 +125,7 @@ function removeBlank (e) {
   })
 }
 
+// AJAX per l'OCR
 ocr.addEventListener('change', async e => {
   let file = e.target.files[0]
   if (!file || !file.type.startsWith('image/')) {
