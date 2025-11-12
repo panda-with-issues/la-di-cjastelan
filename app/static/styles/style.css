@@ -164,6 +164,10 @@ td {
   td {
     padding: .5em .8em;
   }
+
+  .card-title {
+    display: none;
+  }
   
   .global-logo {
     height: 20vh;

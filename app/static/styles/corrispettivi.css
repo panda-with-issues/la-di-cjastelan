@@ -269,7 +269,6 @@ dialog {
     display: block;
   }
 
-  .card-title,
   .card-label {
     display: none;
   }
