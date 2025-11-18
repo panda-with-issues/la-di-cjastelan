@@ -36,7 +36,7 @@ def ocr():
       parsed = read_img(img)
       if len(parsed) < 6:
         parsed2 = read_img(fallback)
-        parsed2 = parsed | parsed2
+        parsed |= parsed2
     else:
       parsed = read_img(fallback)
 
